@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".boundary.ViewGroup">
+
+    <Button
+        android:id="@+id/Back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/ic_back"
+        android:backgroundTint="@color/title"
+        android:drawableTint="@color/title"
+        android:foregroundTint="@color/title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/groupName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Group Name"
+        android:textColor="@color/title"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023" />
+
+    <ImageView
+        android:id="@+id/roundBorder1"
+        android:layout_width="340dp"
+        android:layout_height="180dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.219"
+        app:srcCompat="@drawable/rectangle" />
+
+    <TextView
+        android:id="@+id/carModel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="150dp"
+        android:maxHeight="34dp"
+        android:text="@string/no_ev"
+        android:textColor="#FAF5F5"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/carImage"
+        app:layout_constraintEnd_toEndOf="@+id/carImage"
+        app:layout_constraintStart_toStartOf="@+id/carImage"
+        app:layout_constraintTop_toTopOf="@+id/roundBorder1"
+        app:layout_constraintVertical_bias="0.958" />
+
+    <ImageView
+        android:id="@+id/carImage"
+        android:layout_width="164dp"
+        android:layout_height="79dp"
+        app:layout_constraintBottom_toBottomOf="@+id/roundBorder1"
+        app:layout_constraintEnd_toEndOf="@+id/roundBorder1"
+        app:layout_constraintHorizontal_bias="0.123"
+        app:layout_constraintStart_toStartOf="@+id/roundBorder1"
+        app:layout_constraintTop_toTopOf="@+id/roundBorder1"
+        app:srcCompat="@drawable/car_2" />
+
+
+    <TextView
+        android:id="@+id/homePageBatt"
+        android:layout_width="40dp"
+        android:layout_height="28dp"
+        android:text="@string/dash_percent"
+        android:textAlignment="center"
+        android:textColor="#F6F5F5"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/homePageBattery_icon"
+        app:layout_constraintEnd_toEndOf="@+id/homePageBattery_icon"
+        app:layout_constraintStart_toStartOf="@+id/homePageBattery_icon"
+        app:layout_constraintTop_toTopOf="@+id/homePageBattery_icon"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/homePageBattery_icon"
+        android:layout_width="82dp"
+        android:layout_height="118dp"
+        app:layout_constraintBottom_toBottomOf="@+id/roundBorder1"
+        app:layout_constraintEnd_toEndOf="@+id/roundBorder1"
+        app:layout_constraintHorizontal_bias="0.784"
+        app:layout_constraintStart_toStartOf="@+id/roundBorder1"
+        app:layout_constraintTop_toTopOf="@+id/roundBorder1"
+        app:layout_constraintVertical_bias="0.411"
+        app:srcCompat="@drawable/battery_100" />
+
+    <TextView
+        android:id="@+id/chargeStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Not Charging"
+        android:textColor="#FFFCFC"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/roundBorder1"
+        app:layout_constraintEnd_toEndOf="@+id/carImage"
+        app:layout_constraintStart_toStartOf="@+id/carImage"
+        app:layout_constraintTop_toBottomOf="@+id/carImage"
+        app:layout_constraintVertical_bias="0.051" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

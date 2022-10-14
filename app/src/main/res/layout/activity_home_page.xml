@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/battLevel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".boundary.HomePage">
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/BottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#252525"
+        android:transitionName="BottomBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:menu="@menu/bottom_nav"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <ImageView
+        android:id="@+id/roundBorder1"
+        android:layout_width="340dp"
+        android:layout_height="180dp"
+        app:layout_constraintBottom_toTopOf="@+id/BottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.052"
+        app:srcCompat="@drawable/rectangle" />
+
+    <TextView
+        android:id="@+id/carModel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="150dp"
+        android:maxHeight="34dp"
+        android:text="@string/no_ev"
+        android:textColor="#FAF5F5"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/carImage"
+        app:layout_constraintEnd_toEndOf="@+id/carImage"
+        app:layout_constraintStart_toStartOf="@+id/carImage"
+        app:layout_constraintTop_toTopOf="@+id/roundBorder1"
+        app:layout_constraintVertical_bias="0.958" />
+
+    <ImageView
+        android:id="@+id/carImage"
+        android:layout_width="164dp"
+        android:layout_height="79dp"
+        app:layout_constraintBottom_toBottomOf="@+id/roundBorder1"
+        app:layout_constraintEnd_toEndOf="@+id/roundBorder1"
+        app:layout_constraintHorizontal_bias="0.123"
+        app:layout_constraintStart_toStartOf="@+id/roundBorder1"
+        app:layout_constraintTop_toTopOf="@+id/roundBorder1"
+        app:srcCompat="@drawable/car_2" />
+
+    <ImageView
+        android:id="@+id/roundBorder2"
+        android:layout_width="340dp"
+        android:layout_height="90dp"
+        android:src="@drawable/rectangle"
+
+        app:layout_constraintBottom_toTopOf="@+id/BottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo"
+        app:layout_constraintVertical_bias="0.166" />
+
+    <Button
+        android:id="@+id/buttonIncrease"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="#BBBBBB"
+        android:text="+"
+        android:textColor="#090808"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonDecrease"
+        app:layout_constraintEnd_toEndOf="@+id/roundBorder2"
+        app:layout_constraintTop_toTopOf="@+id/buttonDecrease"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/buttonDecrease"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="#BBBBBB"
+        android:text="@string/dash"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/roundBorder2"
+        app:layout_constraintTop_toTopOf="@+id/roundBorder2" />
+
+    <ImageView
+        android:id="@+id/viewGroup"
+        android:layout_width="340dp"
+        android:layout_height="50dp"
+        android:src="@drawable/rectangle"
+        app:layout_constraintBottom_toTopOf="@+id/BottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roundBorder2"
+        app:layout_constraintVertical_bias="0.092" />
+
+    <TextView
+        android:id="@+id/viewGroupTextView"
+        android:layout_width="340dp"
+        android:layout_height="50dp"
+        android:text="View Group"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="@+id/viewGroup"
+        app:layout_constraintEnd_toEndOf="@+id/viewGroup"
+        app:layout_constraintStart_toStartOf="@+id/viewGroup"
+        app:layout_constraintTop_toTopOf="@+id/viewGroup" />
+
+    <ImageView
+        android:id="@+id/createGroup"
+        android:layout_width="160dp"
+        android:layout_height="50dp"
+        android:src="@drawable/rectangle"
+        app:layout_constraintBottom_toTopOf="@+id/BottomNavigationView"
+        app:layout_constraintEnd_toStartOf="@+id/joinGroup"
+        app:layout_constraintHorizontal_bias="0.654"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewGroup"
+        app:layout_constraintVertical_bias="0.264" />
+
+    <TextView
+        android:id="@+id/createGroupTextView"
+        android:layout_width="160dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="Create Group"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="@+id/createGroup"
+        app:layout_constraintEnd_toEndOf="@+id/createGroup"
+        app:layout_constraintStart_toStartOf="@+id/createGroup"
+        app:layout_constraintTop_toTopOf="@+id/createGroup" />
+
+    <ImageView
+        android:id="@+id/joinGroup"
+        android:layout_width="160dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="36dp"
+        android:src="@drawable/rectangle"
+        app:layout_constraintBottom_toTopOf="@+id/BottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewGroup"
+        app:layout_constraintVertical_bias="0.264" />
+
+    <TextView
+        android:id="@+id/joinGroupTextView"
+        android:layout_width="160dp"
+        android:layout_height="50dp"
+        android:text="Join Group"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="22sp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="@+id/joinGroup"
+        app:layout_constraintEnd_toEndOf="@+id/joinGroup"
+        app:layout_constraintStart_toStartOf="@+id/joinGroup"
+        app:layout_constraintTop_toTopOf="@+id/joinGroup" />
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="143dp"
+        android:layout_height="163dp"
+        app:layout_constraintBottom_toTopOf="@+id/BottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roundBorder1"
+        app:layout_constraintVertical_bias="0.098"
+        app:srcCompat="@drawable/mobisglogo" />
+
+    <TextView
+        android:id="@+id/lowBattAlert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="Low Battery Alert"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@+id/BottomNavigationView"
+        app:layout_constraintEnd_toEndOf="@+id/roundBorder2"
+        app:layout_constraintHorizontal_bias="0.517"
+        app:layout_constraintStart_toStartOf="@+id/roundBorder2"
+        app:layout_constraintTop_toTopOf="@+id/roundBorder2"
+        app:layout_constraintVertical_bias="0.084" />
+
+    <TextView
+        android:id="@+id/counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="0%"
+        android:textColor="#F1F0F0"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/buttonIncrease"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toEndOf="@+id/buttonDecrease"
+        app:layout_constraintTop_toBottomOf="@+id/lowBattAlert" />
+
+    <TextView
+        android:id="@+id/homePageBatt"
+        android:layout_width="40dp"
+        android:layout_height="28dp"
+        android:text="@string/dash_percent"
+        android:textAlignment="center"
+        android:textColor="#F6F5F5"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/homePageBattery_icon"
+        app:layout_constraintEnd_toEndOf="@+id/homePageBattery_icon"
+        app:layout_constraintStart_toStartOf="@+id/homePageBattery_icon"
+        app:layout_constraintTop_toTopOf="@+id/homePageBattery_icon"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/homePageBattery_icon"
+        android:layout_width="82dp"
+        android:layout_height="118dp"
+        app:layout_constraintBottom_toBottomOf="@+id/roundBorder1"
+        app:layout_constraintEnd_toEndOf="@+id/roundBorder1"
+        app:layout_constraintHorizontal_bias="0.784"
+        app:layout_constraintStart_toStartOf="@+id/roundBorder1"
+        app:layout_constraintTop_toTopOf="@+id/roundBorder1"
+        app:layout_constraintVertical_bias="0.411"
+        app:srcCompat="@drawable/battery_100" />
+
+    <TextView
+        android:id="@+id/chargeStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Not Charging"
+        android:textColor="#FFFCFC"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/roundBorder1"
+        app:layout_constraintEnd_toEndOf="@+id/carImage"
+        app:layout_constraintStart_toStartOf="@+id/carImage"
+        app:layout_constraintTop_toBottomOf="@+id/carImage"
+        app:layout_constraintVertical_bias="0.051" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
