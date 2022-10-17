@@ -1,7 +1,7 @@
 package com.example.authapp3.boundary;
 
 public class Group {
-    public String groupname,groupnumber;
+    public String groupnumber, groupname;
 
     public Group(){
 

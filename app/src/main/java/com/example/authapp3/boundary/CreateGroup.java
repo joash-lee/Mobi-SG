@@ -31,7 +31,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class CreateGroup extends AppCompatActivity {
@@ -77,8 +79,23 @@ public class CreateGroup extends AppCompatActivity {
                     editGroupName.requestFocus();
                     return;
                 }
-
-                mAuth.createUserWithEmailAndPassword(groupnumber,groupname).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                Group group = new Group(groupnumber,groupname);
+                Map<String,Object> groupmap = new HashMap<>();
+                groupmap.put(groupnumber, group);
+                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().
+                        getCurrentUser().getUid()).child("Group").updateChildren(groupmap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Toast.makeText(CreateGroup.this,"Group has been created",Toast.LENGTH_LONG).show();
+                            openHomePage();
+                        }
+                        else{
+                            Toast.makeText(CreateGroup.this,"Group creation failed",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            /*    mAuth.signInWithCustomToken(groupnumber).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
@@ -92,15 +109,15 @@ public class CreateGroup extends AppCompatActivity {
                                        openHomePage();
                                     }
                                    else{
-                                       Toast.makeText(CreateGroup.this,"Group creation failed",Toast.LENGTH_LONG).show();
+                                       Toast.makeText(CreateGroup.this,"Group creation failed 1",Toast.LENGTH_LONG).show();
                                    }
                                 }
                             });
                         }else{
-                            Toast.makeText(CreateGroup.this,"Group creation failed",Toast.LENGTH_LONG).show();
+                            Toast.makeText(CreateGroup.this,"Group creation failed 2",Toast.LENGTH_LONG).show();
                         }
                     }
-                });
+                });*/
             }
         });
 
