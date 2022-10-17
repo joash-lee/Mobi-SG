@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.authapp3.R;
+import com.example.authapp3.entity.Distance;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class JoinGroup extends AppCompatActivity {
 
@@ -22,26 +25,35 @@ public class JoinGroup extends AppCompatActivity {
         backButton.setOnClickListener(view -> JoinGroup.this.finish());
         EditText editGroupNumber = findViewById(R.id.editGroupNumber);
         Button joinGroupButton = findViewById(R.id.joinGroupButton);
-
-        String groupNumber =  editGroupNumber.getText().toString();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Users").child("Group");
         joinGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkGroupNumber(groupNumber);
+                checkGroupNumber();
+            }
+
+            private void checkGroupNumber() {
+                String groupNumber = editGroupNumber.getText().toString().trim();
+                if (groupNumber.isEmpty()) {
+                    editGroupNumber.setError("Group Number is Required");
+                    editGroupNumber.requestFocus();
+                    return;
+                }
+
+/*                if (groupNumber.equals("123456")) {
+                    Toast.makeText(JoinGroup.this, "You have successfully joined the group!", Toast.LENGTH_LONG).show();
+                    openViewGroup();
+                } else {
+                    Toast.makeText(JoinGroup.this, "Group does not exist.", Toast.LENGTH_LONG).show();
+                }*/
             }
         });
     }
 
-    public void checkGroupNumber(String groupNumber){
-        if(groupNumber.equals("123456")){
-            Toast.makeText(JoinGroup.this, "You have successfully joined the group!", Toast.LENGTH_LONG).show();
-            openViewGroup();
-        }else{
-            Toast.makeText(JoinGroup.this, "Group does not exist.", Toast.LENGTH_LONG).show();
+        public void openViewGroup () {
+            Intent intent = new Intent(this, ViewGroup.class);
+            startActivity(intent);
         }
-    }
-    public void openViewGroup (){
-        Intent intent = new Intent(this, ViewGroup.class);
-        startActivity(intent);
-    }
+
 }
