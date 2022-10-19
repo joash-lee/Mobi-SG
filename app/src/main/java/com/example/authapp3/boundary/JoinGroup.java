@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.authapp3.R;
 import com.example.authapp3.entity.Distance;
+import com.example.authapp3.entity.EV;
 import com.example.authapp3.entity.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -61,6 +62,7 @@ public class JoinGroup extends AppCompatActivity {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    System.out.println(snapshot);
                                     String groupname;
                                     if (snapshot.hasChild("Group")){
                                         if (snapshot.child("Group").child(groupNumber).exists()){
@@ -88,11 +90,81 @@ public class JoinGroup extends AppCompatActivity {
         startActivity(intent);
     }
     public void addGroupToUser(String groupnumber, String groupname){
-        Group group = new Group(groupnumber,groupname);
+        FirebaseDatabase.getInstance().getReference().child("Users")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            if (snapshot.child("Group").child(groupnumber).exists()){
+                                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().
+                                        getCurrentUser().getUid()).child("Group").setValue(snapshot.child("Group").getValue());
+                                //NEED TO COPY THE GROUP HERE
+                                break;
+                            }
+
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+/*        Group group = new Group(groupnumber,groupname);
         Map<String,Object> groupmap = new HashMap<>();
         groupmap.put(groupnumber, group);
         FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().
-                getCurrentUser().getUid()).child("Group").updateChildren(groupmap);
+                getCurrentUser().getUid()).child("Group").updateChildren(groupmap);*/
+            addevtouser(groupnumber,groupname);
+
+    }
+    public void addevtouser(String groupnumber,String groupname){
+        FirebaseDatabase.getInstance().getReference().child("Users").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            System.out.println(snapshot);
+                            if (snapshot.hasChild("Group")){
+                                if (snapshot.child("Group").hasChild(groupnumber)){
+                                    DatabaseReference ref2 = snapshot.child("Group").child(groupnumber).getRef();
+                                    System.out.println("Current ref");
+                                    System.out.println(ref2);
+
+                                    FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                if (snapshot.getKey().equals("EV")) {
+                                                    EV ev1 = new EV(snapshot.child("chargeStatus").getValue().toString(),snapshot.child("colour").getValue().toString(),snapshot.child("model").getValue().toString(),Integer.parseInt(snapshot.child("batteryStatus").getValue().toString()),Boolean.parseBoolean(snapshot.child("manualInput").getValue().toString()));
+                                                    Map<String, Object> evmap = new HashMap<>();
+                                                    evmap.put("EV1",ev1);
+                                                    /*                                System.out.println(snapshot.child("batteryStatus").getValue().toString());//20*/
+ HB 
+                                                    ref2.updateChildren(evmap).
+                                                            addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    System.out.println("Donezo");
+                                                                }
+                                                            });
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
     }
 
         public void openViewGroup () {

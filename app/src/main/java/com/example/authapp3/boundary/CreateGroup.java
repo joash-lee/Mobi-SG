@@ -1,5 +1,7 @@
 package com.example.authapp3.boundary;
 
+import static java.lang.Boolean.parseBoolean;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,6 +49,7 @@ public class CreateGroup extends AppCompatActivity {
     private AlertDialog dialog;
     private DatabaseReference userReference;
     private FirebaseAuth mAuth;
+    private DatabaseReference groupreference;
 
 
     @Override
@@ -66,6 +69,7 @@ public class CreateGroup extends AppCompatActivity {
         ImageView linkGroupVehicleBorder = findViewById(R.id.linkGroupVehicleBorder);
         String groupnumber = groupNumberGenerator();
         generatedGroupNumber.setText(groupnumber);
+        groupreference = FirebaseDatabase.getInstance().getReference();
         createGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,54 +78,90 @@ public class CreateGroup extends AppCompatActivity {
 
             private void createGroup() {
                 String groupname = editGroupName.getText().toString().trim();
-                if (groupname.isEmpty()){
+                if (groupname.isEmpty()) {
                     editGroupName.setError("Group Name is Required");
                     editGroupName.requestFocus();
                     return;
                 }
-                Group group = new Group(groupnumber,groupname);
-                Map<String,Object> groupmap = new HashMap<>();
+/*                groupreference.push().setValue("Group");
+
+                FirebaseDatabase.getInstance().getReference().child("Group").setValue(groupmap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(CreateGroup.this, "Group has been created", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(CreateGroup.this, "Group creation failed", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });*/
+                Group group = new Group(groupnumber, groupname);
+                Map<String, Object> groupmap = new HashMap<>();
                 groupmap.put(groupnumber, group);
                 FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().
                         getCurrentUser().getUid()).child("Group").updateChildren(groupmap).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(CreateGroup.this,"Group has been created",Toast.LENGTH_LONG).show();
+                        if (task.isSuccessful()) {
+                            Toast.makeText(CreateGroup.this, "Group has been created", Toast.LENGTH_LONG).show();
+                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        if (snapshot.getKey().equals("EV")) {
+                                            EV ev1 = new EV(snapshot.child("chargeStatus").getValue().toString(),snapshot.child("colour").getValue().toString(),snapshot.child("model").getValue().toString(),Integer.parseInt(snapshot.child("batteryStatus").getValue().toString()),Boolean.parseBoolean(snapshot.child("manualInput").getValue().toString()));
+                                            Map<String, Object> evmap = new HashMap<>();
+                                            evmap.put("EV",ev1);
+                                            /*                                System.out.println(snapshot.child("batteryStatus").getValue().toString());//20*/
+                                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().
+                                                    getCurrentUser().getUid()).child("Group").child(groupnumber).updateChildren(evmap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                             openHomePage();
-                        }
-                        else{
-                            Toast.makeText(CreateGroup.this,"Group creation failed",Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(CreateGroup.this, "Group creation failed", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
-            /*    mAuth.signInWithCustomToken(groupnumber).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            Group group = new Group(groupnumber,groupname);
-                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().
-                                    getCurrentUser().getUid()).setValue(group).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                   if (task.isSuccessful()){
-                                       Toast.makeText(CreateGroup.this,"Group has been created",Toast.LENGTH_LONG).show();
-                                       openHomePage();
-                                    }
-                                   else{
-                                       Toast.makeText(CreateGroup.this,"Group creation failed 1",Toast.LENGTH_LONG).show();
-                                   }
-                                }
-                            });
-                        }else{
-                            Toast.makeText(CreateGroup.this,"Group creation failed 2",Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });*/
+
             }
         });
-
-        evModels = new ArrayList<>();
+    }
+/*                    FirebaseDatabase.getInstance().getReference().child("Users")
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                String groupname;
+                if (snapshot.hasChild("Group")){
+                    if (snapshot.child("Group").child(groupNumber).exists()){
+                        *//*                                System.out.println(snapshot.child("Group").child(groupNumber).child("groupname").getValue());*//*
+                        groupname = snapshot.child("Group").child(groupNumber).child("groupname").getValue().toString();
+                        addGroupToUser(groupNumber,groupname);
+                        Toast.makeText(JoinGroup.this,"Group "+groupNumber+" joined successfully",Toast.LENGTH_LONG).show();
+                        openHomePage();
+                    }
+                }
+            }
+            openHomePage();
+            Toast.makeText(JoinGroup.this,"Group "+groupNumber+" does not exist",Toast.LENGTH_LONG).show();
+        }
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+        }
+    });*/
+/*        evModels = new ArrayList<>();
         evModelsReference.child("ModelList").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -156,9 +196,7 @@ public class CreateGroup extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-        linkGroupVehicleBorder.setOnClickListener(view -> linkEVDialog());
-    }
-
+        linkGroupVehicleBorder.setOnClickListener(view -> linkEVDialog());*/
 
     public static String groupNumberGenerator() {
         // It will generate 6 digit random Number.
@@ -174,7 +212,7 @@ public class CreateGroup extends AppCompatActivity {
         Intent intent = new Intent(this, HomePage.class);
         startActivity(intent);
     }
-    private void linkEVDialog() {
+/*    private void linkEVDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View evPopupView = getLayoutInflater().inflate(R.layout.popup_linkev, null);
         Button save = evPopupView.findViewById(R.id.link_ev_save);
@@ -209,8 +247,8 @@ public class CreateGroup extends AppCompatActivity {
         });
 
         cancel.setOnClickListener(view -> dialog.cancel());
-    }
-    private void checkAndLink() {
+    }*/
+/*    private void checkAndLink() {
         evModelError.setError(null);
         evColourError.setError(null);
         if(selectedEVModel.equals("Model")) {
@@ -245,5 +283,5 @@ public class CreateGroup extends AppCompatActivity {
         Toast.makeText(CreateGroup.this, "EV successfully linked", Toast.LENGTH_LONG).show();
         progressBarEV.setVisibility(View.GONE);
         dialog.cancel();
-    }
+    }*/
 }
