@@ -17,8 +17,8 @@ public class ViewGroup extends AppCompatActivity {
 
         Button backButton = findViewById(R.id.Back);
         backButton.setOnClickListener(view -> ViewGroup.this.finish());
-/*        TextView groupName = findViewById(R.id.groupName);
+        TextView groupName = findViewById(R.id.groupName);
 
-        groupName.setText("Pegasus");*/
+        groupName.setText("Pegasus");
     }
 }
