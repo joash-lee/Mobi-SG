@@ -39,7 +39,6 @@ import java.util.Map;
 import java.util.Random;
 
 public class CreateGroup extends AppCompatActivity {
-
     private EditText evModelError, evColourError, evBatteryLevel;
     private ProgressBar progressBarEV;
     private Spinner spinnerEVModel, spinnerEVColour;
@@ -50,8 +49,6 @@ public class CreateGroup extends AppCompatActivity {
     private DatabaseReference userReference;
     private FirebaseAuth mAuth;
     private DatabaseReference groupreference;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +63,6 @@ public class CreateGroup extends AppCompatActivity {
         TextView generatedGroupNumber = findViewById(R.id.generatedGroupNumber);
         Button createGroupButton = findViewById(R.id.createGroupButton);
         EditText editGroupName = findViewById(R.id.editGroupName);
-        ImageView linkGroupVehicleBorder = findViewById(R.id.linkGroupVehicleBorder);
         String groupnumber = groupNumberGenerator();
         generatedGroupNumber.setText(groupnumber);
         groupreference = FirebaseDatabase.getInstance().getReference();
@@ -75,7 +71,6 @@ public class CreateGroup extends AppCompatActivity {
             public void onClick(View view) {
                 createGroup();
             }
-
             private void createGroup() {
                 String groupname = editGroupName.getText().toString().trim();
                 if (groupname.isEmpty()) {
@@ -83,6 +78,66 @@ public class CreateGroup extends AppCompatActivity {
                     editGroupName.requestFocus();
                     return;
                 }
+                Group group = new Group(groupnumber, groupname);
+                Map<String, Object> groupmap = new HashMap<>();
+                groupmap.put(groupnumber, group);
+                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().
+                        getCurrentUser().getUid()).child("Group").updateChildren(groupmap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(CreateGroup.this, "Group has been created", Toast.LENGTH_LONG).show();
+                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                                //addListenerForSingleValueEvent
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        if (snapshot.getKey().equals("EV")) {
+                                            EV ev1 = new EV(snapshot.child("chargeStatus").getValue().toString(),snapshot.child("colour").getValue().toString(),snapshot.child("model").getValue().toString(),Integer.parseInt(snapshot.child("batteryStatus").getValue().toString()),Boolean.parseBoolean(snapshot.child("manualInput").getValue().toString()));
+                                            Map<String, Object> evmap = new HashMap<>();
+                                            evmap.put("EV",ev1);
+                                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().
+                                                    getCurrentUser().getUid()).child("Group").child(groupnumber).updateChildren(evmap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+                            openHomePage();
+                        } else {
+                            Toast.makeText(CreateGroup.this, "Group creation failed", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        });
+    }
+    public static String groupNumberGenerator() {
+        // It will generate 6 digit random Number.
+        // from 0 to 999999
+        Random rnd = new Random();
+        int number = rnd.nextInt(999999);
+        // this will convert any number sequence into 6 character.
+        return String.format("%06d", number);
+    }
+    public void openHomePage (){
+        Intent intent = new Intent(this, HomePage.class);
+        startActivity(intent);
+    }
+}
+
+
+
+
+
+
+
 /*                groupreference.push().setValue("Group");
 
                 FirebaseDatabase.getInstance().getReference().child("Group").setValue(groupmap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -95,49 +150,78 @@ public class CreateGroup extends AppCompatActivity {
                         }
                     }
                 });*/
-                Group group = new Group(groupnumber, groupname);
-                Map<String, Object> groupmap = new HashMap<>();
-                groupmap.put(groupnumber, group);
-                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().
-                        getCurrentUser().getUid()).child("Group").updateChildren(groupmap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(CreateGroup.this, "Group has been created", Toast.LENGTH_LONG).show();
-                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                        if (snapshot.getKey().equals("EV")) {
-                                            EV ev1 = new EV(snapshot.child("chargeStatus").getValue().toString(),snapshot.child("colour").getValue().toString(),snapshot.child("model").getValue().toString(),Integer.parseInt(snapshot.child("batteryStatus").getValue().toString()),Boolean.parseBoolean(snapshot.child("manualInput").getValue().toString()));
-                                            Map<String, Object> evmap = new HashMap<>();
-                                            evmap.put("EV",ev1);
-                                            /*                                System.out.println(snapshot.child("batteryStatus").getValue().toString());//20*/
-                                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().
-                                                    getCurrentUser().getUid()).child("Group").child(groupnumber).updateChildren(evmap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                }
-                                            });
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-                            openHomePage();
-                        } else {
-                            Toast.makeText(CreateGroup.this, "Group creation failed", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-
+/*    private void checkAndLink() {
+        evModelError.setError(null);
+        evColourError.setError(null);
+        if(selectedEVModel.equals("Model")) {
+            evModelError.setError("Please select model!");
+            evModelError.requestFocus();
+            return;
+        }
+        if(selectedEVColour.equals("Colour")) {
+            evColourError.setError("Please select colour!");
+            evColourError.requestFocus();
+            return;
+        }
+        int selectedEVBatteryLevelInt;
+        try
+        {
+            selectedEVBatteryLevelInt = Integer.parseInt(selectedEVBatteryLevelText);
+            if(selectedEVBatteryLevelInt < 0 | selectedEVBatteryLevelInt > 100) {
+                evBatteryLevel.setError("Must be an integer between 0 to 100");
+                evBatteryLevel.requestFocus();
+                return;
             }
+        }
+        catch (NumberFormatException e)
+        {
+            evBatteryLevel.setError("Must be an integer between 0 to 100");
+            evBatteryLevel.requestFocus();
+            return;
+        }
+        progressBarEV.setVisibility(View.VISIBLE);
+        EV ev = new EV(chargingStatus, selectedEVColour, selectedEVModel, selectedEVBatteryLevelInt, true);
+        userReference.child(userid).child("EV").setValue(ev);
+        Toast.makeText(CreateGroup.this, "EV successfully linked", Toast.LENGTH_LONG).show();
+        progressBarEV.setVisibility(View.GONE);
+        dialog.cancel();
+    }*/
+/*    private void linkEVDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        final View evPopupView = getLayoutInflater().inflate(R.layout.popup_linkev, null);
+        Button save = evPopupView.findViewById(R.id.link_ev_save);
+        Button cancel = evPopupView.findViewById(R.id.link_ev_cancel);
+
+        evModelError = evPopupView.findViewById(R.id.evModelError);
+        evColourError = evPopupView.findViewById(R.id.evColourError);
+        evBatteryLevel = evPopupView.findViewById(R.id.evBatteryLevel);
+        progressBarEV = evPopupView.findViewById(R.id.progressBarEV);
+
+        spinnerEVModel = evPopupView.findViewById(R.id.spinnerEVModel);
+
+        ArrayAdapter<String> adapterEVModel = new ArrayAdapter<>(CreateGroup.this, android.R.layout.simple_spinner_item, evModelsList);
+        adapterEVModel.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerEVModel.setAdapter(adapterEVModel);
+
+        spinnerEVColour = evPopupView.findViewById(R.id.spinnerEVColour);
+
+        ArrayAdapter<String> adapterEVColour = new ArrayAdapter<>(CreateGroup.this, android.R.layout.simple_spinner_item, evColoursList);
+        adapterEVColour.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerEVColour.setAdapter(adapterEVColour);
+
+        dialogBuilder.setView(evPopupView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        save.setOnClickListener(view -> {
+            selectedEVModel = spinnerEVModel.getSelectedItem().toString();
+            selectedEVColour = spinnerEVColour.getSelectedItem().toString();
+            selectedEVBatteryLevelText = evBatteryLevel.getText().toString().trim();
+            checkAndLink();
         });
-    }
+
+        cancel.setOnClickListener(view -> dialog.cancel());
+    }*/
 /*                    FirebaseDatabase.getInstance().getReference().child("Users")
                         .addListenerForSingleValueEvent(new ValueEventListener() {
         @Override
@@ -197,91 +281,3 @@ public class CreateGroup extends AppCompatActivity {
             }
         });
         linkGroupVehicleBorder.setOnClickListener(view -> linkEVDialog());*/
-
-    public static String groupNumberGenerator() {
-        // It will generate 6 digit random Number.
-        // from 0 to 999999
-        Random rnd = new Random();
-        int number = rnd.nextInt(999999);
-
-        // this will convert any number sequence into 6 character.
-        return String.format("%06d", number);
-    }
-
-    public void openHomePage (){
-        Intent intent = new Intent(this, HomePage.class);
-        startActivity(intent);
-    }
-/*    private void linkEVDialog() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        final View evPopupView = getLayoutInflater().inflate(R.layout.popup_linkev, null);
-        Button save = evPopupView.findViewById(R.id.link_ev_save);
-        Button cancel = evPopupView.findViewById(R.id.link_ev_cancel);
-
-        evModelError = evPopupView.findViewById(R.id.evModelError);
-        evColourError = evPopupView.findViewById(R.id.evColourError);
-        evBatteryLevel = evPopupView.findViewById(R.id.evBatteryLevel);
-        progressBarEV = evPopupView.findViewById(R.id.progressBarEV);
-
-        spinnerEVModel = evPopupView.findViewById(R.id.spinnerEVModel);
-
-        ArrayAdapter<String> adapterEVModel = new ArrayAdapter<>(CreateGroup.this, android.R.layout.simple_spinner_item, evModelsList);
-        adapterEVModel.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerEVModel.setAdapter(adapterEVModel);
-
-        spinnerEVColour = evPopupView.findViewById(R.id.spinnerEVColour);
-
-        ArrayAdapter<String> adapterEVColour = new ArrayAdapter<>(CreateGroup.this, android.R.layout.simple_spinner_item, evColoursList);
-        adapterEVColour.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerEVColour.setAdapter(adapterEVColour);
-
-        dialogBuilder.setView(evPopupView);
-        dialog = dialogBuilder.create();
-        dialog.show();
-
-        save.setOnClickListener(view -> {
-            selectedEVModel = spinnerEVModel.getSelectedItem().toString();
-            selectedEVColour = spinnerEVColour.getSelectedItem().toString();
-            selectedEVBatteryLevelText = evBatteryLevel.getText().toString().trim();
-            checkAndLink();
-        });
-
-        cancel.setOnClickListener(view -> dialog.cancel());
-    }*/
-/*    private void checkAndLink() {
-        evModelError.setError(null);
-        evColourError.setError(null);
-        if(selectedEVModel.equals("Model")) {
-            evModelError.setError("Please select model!");
-            evModelError.requestFocus();
-            return;
-        }
-        if(selectedEVColour.equals("Colour")) {
-            evColourError.setError("Please select colour!");
-            evColourError.requestFocus();
-            return;
-        }
-        int selectedEVBatteryLevelInt;
-        try
-        {
-            selectedEVBatteryLevelInt = Integer.parseInt(selectedEVBatteryLevelText);
-            if(selectedEVBatteryLevelInt < 0 | selectedEVBatteryLevelInt > 100) {
-                evBatteryLevel.setError("Must be an integer between 0 to 100");
-                evBatteryLevel.requestFocus();
-                return;
-            }
-        }
-        catch (NumberFormatException e)
-        {
-            evBatteryLevel.setError("Must be an integer between 0 to 100");
-            evBatteryLevel.requestFocus();
-            return;
-        }
-        progressBarEV.setVisibility(View.VISIBLE);
-        EV ev = new EV(chargingStatus, selectedEVColour, selectedEVModel, selectedEVBatteryLevelInt, true);
-        userReference.child(userid).child("EV").setValue(ev);
-        Toast.makeText(CreateGroup.this, "EV successfully linked", Toast.LENGTH_LONG).show();
-        progressBarEV.setVisibility(View.GONE);
-        dialog.cancel();
-    }*/
-}

@@ -77,7 +77,7 @@
         app:layout_constraintStart_toStartOf="@+id/groupNameBorder"
         app:layout_constraintTop_toTopOf="@+id/groupNameBorder" />
 
-    <ImageView
+   <!-- <ImageView
         android:id="@+id/linkGroupVehicleBorder"
         android:layout_width="340dp"
         android:layout_height="70dp"
@@ -86,9 +86,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/groupNameBorder" />
+        app:layout_constraintTop_toBottomOf="@+id/groupNameBorder" />-->
 
-    <TextView
+  <!--  <TextView
         android:id="@+id/linkGroupVehicle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/linkGroupVehicleBorder"
         app:layout_constraintEnd_toEndOf="@+id/linkGroupVehicleBorder"
         app:layout_constraintStart_toStartOf="@+id/linkGroupVehicleBorder"
-        app:layout_constraintTop_toTopOf="@+id/linkGroupVehicleBorder" />
+        app:layout_constraintTop_toTopOf="@+id/linkGroupVehicleBorder" />-->
 
 
     <Button
@@ -113,9 +113,11 @@
         android:textColor="#ffffff"
         android:textSize="16sp"
         app:cornerRadius="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linkGroupVehicleBorder" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.944" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
