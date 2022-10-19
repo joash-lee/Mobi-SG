@@ -29,8 +29,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class JoinGroup extends AppCompatActivity {
+    private static final CharSequence ALLOWED_CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789";
     private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,9 +137,10 @@ public class JoinGroup extends AppCompatActivity {
                                                 if (snapshot.getKey().equals("EV")) {
                                                     EV ev1 = new EV(snapshot.child("chargeStatus").getValue().toString(),snapshot.child("colour").getValue().toString(),snapshot.child("model").getValue().toString(),Integer.parseInt(snapshot.child("batteryStatus").getValue().toString()),Boolean.parseBoolean(snapshot.child("manualInput").getValue().toString()));
                                                     Map<String, Object> evmap = new HashMap<>();
-                                                    evmap.put("EV1",ev1);
+                                                    String evtext = getRandomString(10);
+                                                    evmap.put(evtext,ev1);
                                                     /*                                System.out.println(snapshot.child("batteryStatus").getValue().toString());//20*/
- HB 
+
                                                     ref2.updateChildren(evmap).
                                                             addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
@@ -165,6 +168,14 @@ public class JoinGroup extends AppCompatActivity {
 
                     }
                 });
+    }
+    public String getRandomString(final int sizeOfRandomString)
+    {
+        final Random random=new Random();
+        final StringBuilder sb=new StringBuilder(sizeOfRandomString);
+        for(int i=0;i<sizeOfRandomString;++i)
+            sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
+        return sb.toString();
     }
 
         public void openViewGroup () {
