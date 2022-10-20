@@ -34,11 +34,9 @@ import java.util.Random;
 public class JoinGroup extends AppCompatActivity {
     private static final CharSequence ALLOWED_CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789";
     private FirebaseAuth mAuth;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String evtext = groupNumberGenerator();
         setContentView(R.layout.activity_join_group);
         Button backButton = findViewById(R.id.Back);
         backButton.setOnClickListener(view -> JoinGroup.this.finish());
@@ -60,89 +58,135 @@ public class JoinGroup extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            System.out.println(snapshot);
+/*                            System.out.println(snapshot);*/
                             String groupname;
                             if (snapshot.hasChild("Group")) {
                                 if (snapshot.child("Group").child(groupNumber).exists()) {
-                                    /*                                System.out.println(snapshot.child("Group").child(groupNumber).child("groupname").getValue());*/
                                     groupname = snapshot.child("Group").child(groupNumber).child("groupname").getValue().toString();
                                     addGroupToUser(groupNumber, groupname);
                                     Toast.makeText(JoinGroup.this, "Group " + groupNumber + " joined successfully", Toast.LENGTH_LONG).show();
-                                    openHomePage();
+                                    break;
+                                }else{
+                                    Toast.makeText(JoinGroup.this, "Group " + groupNumber + " does not exist", Toast.LENGTH_LONG).show();
+                                    break;
                                 }
                             }
                         }
-                        openHomePage();
-                        Toast.makeText(JoinGroup.this, "Group " + groupNumber + " does not exist", Toast.LENGTH_LONG).show();
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
+                openHomePage();
             }
         });
     }
-
     public void openHomePage() {
         Intent intent = new Intent(this, HomePage.class);
         startActivity(intent);
     }
     public void addGroupToUser(String groupnumber, String groupname) {
         FirebaseDatabase.getInstance().getReference().child("Users")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
+                    //addlistenerforsinglevalueevent
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             if (snapshot.child("Group").child(groupnumber).exists()) {
+                                Map<String, Object> groupmap = new HashMap<>();
+                                groupmap.put(groupnumber,snapshot.child("Group").child(groupnumber).getValue());
                                 FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().
-                                        getCurrentUser().getUid()).child("Group").setValue(snapshot.child("Group").getValue());
+                                        getCurrentUser().getUid()).child("Group").updateChildren(groupmap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                    }
+                                });
                                 break;
                             }
-
                         }
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
-        addevtouser(groupnumber, groupname);
-
+        checkCurrentUserEV(groupnumber);
     }
 
-    public void addevtouser(String groupnumber, String groupname) {
+    public void checkCurrentUserEV(String groupnumber){
+        DatabaseReference flagref = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getRef();
+        boolean pleaseworkflag;
+        FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+            //addListenerForSingleValueEvent
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.getKey().equals("EV")) {
+                        addevtouser(groupnumber);
+                        break;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+
+    public void addevtouser(String groupnumber) {
+    System.out.println("THE CURRENT USER HAS AN EV");
+/*
+        FirebaseDatabase.getInstance().getReference().child("Users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                if (snapshot.child("Group").hasChild(groupnumber)) {
+                 if (snapshot.child("Group").hasChild(groupnumber)) {
+                 DatabaseReference ref2 = snapshot.child("Group").child(groupnumber).getRef();
+                 }
+                }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        */
+/*
+
+
+
         FirebaseDatabase.getInstance().getReference().child("Users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-/*                Random rnd = new Random();
-                int number = rnd.nextInt(99999999);*/
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    System.out.println(snapshot);
                     if (snapshot.hasChild("Group")) {
                         if (snapshot.child("Group").hasChild(groupnumber)) {
                             DatabaseReference ref2 = snapshot.child("Group").child(groupnumber).getRef();
-                            System.out.println("Current ref");
-                            System.out.println(ref2);
-
-                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                                //addlistenerforsinglevalueevent
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                         if (snapshot.getKey().equals("EV")) {
                                             EV ev1 = new EV(snapshot.child("chargeStatus").getValue().toString(), snapshot.child("colour").getValue().toString(), snapshot.child("model").getValue().toString(), Integer.parseInt(snapshot.child("batteryStatus").getValue().toString()), Boolean.parseBoolean(snapshot.child("manualInput").getValue().toString()));
                                             Map<String, Object> evmap = new HashMap<>();
-/*                                            String evtext;
-                                            evtext = groupNumberGenerator();*/
-
-                                            evmap.put("EV1", ev1);
+                                            String evtext = groupNumberGenerator();
+                                            evmap.put(evtext,ev1);
+*//*                                            evmap.put("EV1", ev1);*//*
                                             ref2.updateChildren(evmap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     System.out.println("Donezo");
                                                 }
                                             });
+                                            break;
                                         }
                                     }
-                                }
+                                };
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
@@ -159,7 +203,7 @@ public class JoinGroup extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
     }
     public static String groupNumberGenerator() {
         // It will generate 6 digit random Number.
