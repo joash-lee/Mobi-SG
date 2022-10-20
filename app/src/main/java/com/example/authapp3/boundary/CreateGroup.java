@@ -95,7 +95,7 @@ public class CreateGroup extends AppCompatActivity {
                                         if (snapshot.getKey().equals("EV")) {
                                             EV ev1 = new EV(snapshot.child("chargeStatus").getValue().toString(),snapshot.child("colour").getValue().toString(),snapshot.child("model").getValue().toString(),Integer.parseInt(snapshot.child("batteryStatus").getValue().toString()),Boolean.parseBoolean(snapshot.child("manualInput").getValue().toString()));
                                             Map<String, Object> evmap = new HashMap<>();
-                                            evmap.put("EV",ev1);
+                                            evmap.put("Creator EV",ev1);
                                             FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().
                                                     getCurrentUser().getUid()).child("Group").child(groupnumber).updateChildren(evmap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
