@@ -135,26 +135,54 @@ public class JoinGroup extends AppCompatActivity {
 
 
     public void addevtouser(String groupnumber) {
-    System.out.println("THE CURRENT USER HAS AN EV");
-/*
-        FirebaseDatabase.getInstance().getReference().child("Users").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                if (snapshot.child("Group").hasChild(groupnumber)) {
-                 if (snapshot.child("Group").hasChild(groupnumber)) {
-                 DatabaseReference ref2 = snapshot.child("Group").child(groupnumber).getRef();
-                 }
-                }
-                }
-            }
 
+        FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+            //addlistenerforsinglevalueevent
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.getKey().equals("EV")) {
+                        EV ev1 = new EV(snapshot.child("chargeStatus").getValue().toString(), snapshot.child("colour").getValue().toString(), snapshot.child("model").getValue().toString(), Integer.parseInt(snapshot.child("batteryStatus").getValue().toString()), Boolean.parseBoolean(snapshot.child("manualInput").getValue().toString()));
+/*                        Map<String, Object> evmap = new HashMap<>();*/
+/*                        String evtext = groupNumberGenerator();*/
+                            String evtext = groupNumberGenerator();
+                            Map<String,Object> evmap = new HashMap<>();
+                            evmap.put(evtext,ev1);
+                        FirebaseDatabase.getInstance().getReference().child("Users").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    if (snapshot.child("Group").hasChild(groupnumber)) {
+                                        if (snapshot.child("Group").hasChild(groupnumber)) {
+                                            snapshot.child("Group").child(groupnumber).getRef().updateChildren(evmap);
+                                            System.out.println("NEED TO ADD THE NEW EV HERE");
+/*                                            FirebaseDatabase.getInstance().getReference("Users").child("Group").child(groupnumber).updateChildren(evmap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                }
+                                            });*/
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+/*                        evmap.put("EV1", ev1);*/
+                        break;
+                    }
+                }
+            };
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
-        */
+
+
 /*
 
 
@@ -209,10 +237,10 @@ public class JoinGroup extends AppCompatActivity {
         // It will generate 6 digit random Number.
         // from 0 to 999999
         Random rnd = new Random();
-        int number = rnd.nextInt(999999);
+        int number = rnd.nextInt(999999999);
 
         // this will convert any number sequence into 6 character.
-        return String.format("%06d", number);
+        return String.format("%09d", number);
     }
 
 }
