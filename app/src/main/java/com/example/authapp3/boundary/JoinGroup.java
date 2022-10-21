@@ -58,7 +58,7 @@ public class JoinGroup extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-/*                            System.out.println(snapshot);*/
+                            System.out.println(snapshot);
                             String groupname;
                             if (snapshot.hasChild("Group")) {
                                 if (snapshot.child("Group").child(groupNumber).exists()) {

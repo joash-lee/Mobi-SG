@@ -87,13 +87,18 @@ public class CreateGroup extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(CreateGroup.this, "Group has been created", Toast.LENGTH_LONG).show();
-                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).
+                                    addValueEventListener(new ValueEventListener() {
                                 //addListenerForSingleValueEvent
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                         if (snapshot.getKey().equals("EV")) {
-                                            EV ev1 = new EV(snapshot.child("chargeStatus").getValue().toString(),snapshot.child("colour").getValue().toString(),snapshot.child("model").getValue().toString(),Integer.parseInt(snapshot.child("batteryStatus").getValue().toString()),Boolean.parseBoolean(snapshot.child("manualInput").getValue().toString()));
+                                            EV ev1 = new EV(snapshot.child("chargeStatus").getValue().toString()
+                                                    ,snapshot.child("colour").getValue().toString()
+                                                    ,snapshot.child("model").getValue().toString()
+                                                    ,Integer.parseInt(snapshot.child("batteryStatus").getValue().toString())
+                                                    ,Boolean.parseBoolean(snapshot.child("manualInput").getValue().toString()));
                                             Map<String, Object> evmap = new HashMap<>();
                                             evmap.put("Creator EV",ev1);
                                             FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().
