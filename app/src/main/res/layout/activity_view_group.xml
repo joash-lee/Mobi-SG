@@ -157,4 +157,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.943" />
 
+    <ListView
+        android:id="@+id/viewgrouplistview"
+        android:layout_width="409dp"
+        android:layout_height="483dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:divider="@color/black"
+        android:dividerHeight="2dp"
+        android:listSelector="@color/boxColour"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.233" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

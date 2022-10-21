@@ -18,6 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Authapp3">
         <activity
+            android:name=".CustomListViewRow"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".boundary.ContactUs"
             android:exported="false" />
         <activity
