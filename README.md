@@ -1,6 +1,4 @@
 # Mobi-SG
-Android Application to be installed on tablet or mobile
+Android Application to be installed on mobile
 
-Companion App that connects to a constucted robot via bluetooth
-
-Robot is capable of computer vision and traversing terrains
+Application Designed to Help Electric Vehicle Users in Singapore
